@@ -34,6 +34,13 @@ export const productType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'featuredOnHome',
+      title: 'Destacar na Home Page',
+      description: 'Marque esta opção para exibir este produto na seção Nossas Soluções da página inicial.',
+      type: 'boolean',
+      initialValue: false,
+    }),
+    defineField({
       name: 'category',
       title: 'Categoria',
       type: 'reference',
