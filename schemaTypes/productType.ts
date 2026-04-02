@@ -14,6 +14,16 @@ export const productType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'alternativeNames',
+      title: 'Nomes Alternativos / Regionalismos',
+      description: 'Ex: Envasadora de bolacha, Empacotadora de biscoito. Tecle Enter para adicionar.',
+      type: 'array',
+      of: [{ type: 'string' }],
+      options: {
+        layout: 'tags'
+      }
+    }),
+    defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
@@ -93,6 +103,52 @@ export const productType = defineType({
       type: 'file',
       options: {
         accept: '.pdf'
+      }
+    }),
+    defineField({
+      name: 'applications',
+      title: 'Aplicações (Ideal para)',
+      description: 'Ex: Ração Animal, Sal Mineral, Grãos, etc. Pressione Enter para adicionar.',
+      type: 'array',
+      of: [{type: 'string'}],
+      options: {
+        layout: 'tags',
+      },
+    }),
+    defineField({
+      name: 'animalTypes',
+      title: 'Tipos de Animais Atendidos',
+      description: 'Selecione os tipos de animais para os quais este equipamento pode produzir.',
+      type: 'array',
+      of: [{type: 'string'}],
+      options: {
+        list: [
+          {title: 'Bovinos', value: 'bovino'},
+          {title: 'Suínos', value: 'suino'},
+          {title: 'Aves', value: 'aves'},
+          {title: 'Equinos', value: 'equino'},
+          {title: 'Pets', value: 'pet'},
+          {title: 'Caprinos/Ovinos', value: 'caprino'},
+          {title: 'Outros', value: 'outros'},
+        ],
+        layout: 'grid',
+      },
+    }),
+    defineField({
+      name: 'productionScale',
+      title: 'Porte de Produção (Escala de 1 a 5)',
+      description: '1 = Pequeno Produtor/Iniciante, 5 = Grande Indústria de Alta Demanda',
+      type: 'number',
+      validation: (rule) => rule.min(1).max(5).integer(),
+      options: {
+        list: [
+          {title: 'Empreendedor/Inicial (1)', value: 1},
+          {title: 'Pequeno Produtor (2)', value: 2},
+          {title: 'Média Produção (3)', value: 3},
+          {title: 'Semi-Industrial (4)', value: 4},
+          {title: 'Grande Indústria (5)', value: 5},
+        ],
+        layout: 'radio'
       }
     }),
     defineField({
