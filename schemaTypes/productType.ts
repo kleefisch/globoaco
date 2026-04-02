@@ -41,6 +41,12 @@ export const productType = defineType({
       initialValue: false,
     }),
     defineField({
+      name: 'featuredCatchphrase',
+      title: 'Frase de Impacto (Destaque Home)',
+      description: 'Curta frase que aparecerá logo abaixo do nome do produto no card da seção Nossas Soluções.',
+      type: 'string',
+    }),
+    defineField({
       name: 'category',
       title: 'Categoria',
       type: 'reference',
