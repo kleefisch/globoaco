@@ -1,5 +1,5 @@
-import { defineType, defineField, defineArrayMember } from 'sanity'
-import { PackageIcon } from '@sanity/icons'
+import {defineType, defineField, defineArrayMember} from 'sanity'
+import {PackageIcon} from '@sanity/icons'
 
 export const productType = defineType({
   name: 'product',
@@ -16,12 +16,13 @@ export const productType = defineType({
     defineField({
       name: 'alternativeNames',
       title: 'Nomes Alternativos / Regionalismos',
-      description: 'Ex: Envasadora de bolacha, Empacotadora de biscoito. Tecle Enter para adicionar.',
+      description:
+        'Ex: Envasadora de bolacha, Empacotadora de biscoito. Tecle Enter para adicionar.',
       type: 'array',
-      of: [{ type: 'string' }],
+      of: [{type: 'string'}],
       options: {
-        layout: 'tags'
-      }
+        layout: 'tags',
+      },
     }),
     defineField({
       name: 'slug',
@@ -36,21 +37,23 @@ export const productType = defineType({
     defineField({
       name: 'featuredOnHome',
       title: 'Destacar na Home Page',
-      description: 'Marque esta opção para exibir este produto na seção Nossas Soluções da página inicial.',
+      description:
+        'Marque esta opção para exibir este produto na seção Nossas Soluções da página inicial.',
       type: 'boolean',
       initialValue: false,
     }),
     defineField({
       name: 'featuredCatchphrase',
       title: 'Frase de Impacto (Destaque Home)',
-      description: 'Curta frase que aparecerá logo abaixo do nome do produto no card da seção Nossas Soluções.',
+      description:
+        'Curta frase que aparecerá logo abaixo do nome do produto no card da seção Nossas Soluções.',
       type: 'string',
     }),
     defineField({
       name: 'category',
       title: 'Categoria',
       type: 'reference',
-      to: [{ type: 'category' }],
+      to: [{type: 'category'}],
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -77,8 +80,8 @@ export const productType = defineType({
               name: 'alt',
               type: 'string',
               title: 'Texto Alternativo',
-            })
-          ]
+            }),
+          ],
         }),
       ],
     }),
@@ -86,7 +89,8 @@ export const productType = defineType({
       name: 'shortDescription',
       title: 'Resumo Técnico',
       type: 'text',
-      description: 'Breve descrição que aparece no card do produto na listagem e na parte superior da página.'
+      description:
+        'Breve descrição que aparece no card do produto na listagem e na parte superior da página.',
     }),
     defineField({
       name: 'specifications',
@@ -101,31 +105,31 @@ export const productType = defineType({
               name: 'property',
               title: 'Característica',
               type: 'string',
-              description: 'Ex: Potência do Motor'
+              description: 'Ex: Potência do Motor',
             }),
             defineField({
               name: 'value',
               title: 'Valor',
               type: 'string',
-              description: 'Ex: 50 CV'
-            })
+              description: 'Ex: 50 CV',
+            }),
           ],
           preview: {
             select: {
               title: 'property',
-              subtitle: 'value'
-            }
-          }
-        })
-      ]
+              subtitle: 'value',
+            },
+          },
+        }),
+      ],
     }),
     defineField({
       name: 'datasheet',
       title: 'Arquivo PDF (Datasheet/Manual)',
       type: 'file',
       options: {
-        accept: '.pdf'
-      }
+        accept: '.pdf',
+      },
     }),
     defineField({
       name: 'applications',
@@ -170,16 +174,14 @@ export const productType = defineType({
           {title: 'Semi-Industrial (4)', value: 4},
           {title: 'Grande Indústria (5)', value: 5},
         ],
-        layout: 'radio'
-      }
+        layout: 'radio',
+      },
     }),
     defineField({
       name: 'description',
       title: 'Texto Descritivo Principal',
       type: 'array',
-      of: [
-        defineArrayMember({ type: 'block' }),
-      ],
+      of: [defineArrayMember({type: 'block'})],
     }),
   ],
   preview: {
@@ -190,12 +192,12 @@ export const productType = defineType({
       images: 'images',
     },
     prepare(selection) {
-      const { title, subtitle, coverImage, images } = selection
+      const {title, subtitle, coverImage, images} = selection
       return {
         title: title,
         subtitle: subtitle,
         media: coverImage || (images && images.length > 0 ? images[0] : undefined),
       }
-    }
-  }
+    },
+  },
 })

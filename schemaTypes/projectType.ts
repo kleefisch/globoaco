@@ -100,19 +100,17 @@ export const projectType = defineType({
         defineArrayMember({
           type: 'object',
           fields: [
-            defineField({ name: 'title', title: 'Nome do Equipamento', type: 'string', validation: (rule) => rule.required() }),
-            defineField({ name: 'description', title: 'Breve Descrição', type: 'text' })
+            defineField({
+              name: 'title',
+              title: 'Nome do Equipamento',
+              type: 'string',
+              validation: (rule) => rule.required(),
+            }),
+            defineField({name: 'description', title: 'Breve Descrição', type: 'text'}),
           ],
-          preview: { select: { title: 'title', subtitle: 'description' } }
-        })
-      ]
-    }),
-    defineField({
-      name: 'equipment',
-      title: 'Equipamentos (Legado)',
-      type: 'array',
-      description: 'OBS: Este campo é antigo. Use a "Lista de Equipamentos" acima se possível.',
-      of: [{type: 'block'}],
+          preview: {select: {title: 'title', subtitle: 'description'}},
+        }),
+      ],
     }),
     defineField({
       name: 'challenge',
@@ -126,13 +124,6 @@ export const projectType = defineType({
       title: 'A Solução',
       type: 'array',
       description: 'Descreva como a GAM resolveu o desafio.',
-      of: [{type: 'block'}],
-    }),
-    defineField({
-      name: 'challengeAndSolution',
-      title: 'Desafio e Solução (Legado)',
-      type: 'array',
-      description: 'OBS: Este campo é antigo. Use "O Desafio" e "A Solução".',
       of: [{type: 'block'}],
     }),
   ],
