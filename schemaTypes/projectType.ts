@@ -1,5 +1,5 @@
-import { defineType, defineField, defineArrayMember } from 'sanity'
-import { CheckmarkIcon } from '@sanity/icons'
+import {defineType, defineField, defineArrayMember} from 'sanity'
+import {CheckmarkIcon} from '@sanity/icons'
 
 export const projectType = defineType({
   name: 'project',
@@ -33,9 +33,9 @@ export const projectType = defineType({
       name: 'tags',
       title: 'Tags / Segmentos',
       type: 'array',
-      of: [{ type: 'string' }],
+      of: [{type: 'string'}],
       options: {
-        layout: 'tags'
+        layout: 'tags',
       },
       description: 'Ex: Pequeno porte, Mistura, Armazenagem, Turn-key',
     }),
@@ -57,7 +57,7 @@ export const projectType = defineType({
           type: 'image',
           options: {
             hotspot: true,
-          }
+          },
         }),
       ],
     }),
@@ -89,19 +89,51 @@ export const projectType = defineType({
       name: 'overview',
       title: 'Visão Geral (Overview)',
       type: 'array',
-      of: [{ type: 'block' }],
+      of: [{type: 'block'}],
+    }),
+    defineField({
+      name: 'equipmentList',
+      title: 'Lista de Equipamentos',
+      type: 'array',
+      description: 'Adicione os equipamentos em formato de lista (título e descrição)',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          fields: [
+            defineField({ name: 'title', title: 'Nome do Equipamento', type: 'string', validation: (rule) => rule.required() }),
+            defineField({ name: 'description', title: 'Breve Descrição', type: 'text' })
+          ],
+          preview: { select: { title: 'title', subtitle: 'description' } }
+        })
+      ]
     }),
     defineField({
       name: 'equipment',
-      title: 'Equipamentos',
+      title: 'Equipamentos (Legado)',
       type: 'array',
-      of: [{ type: 'block' }],
+      description: 'OBS: Este campo é antigo. Use a "Lista de Equipamentos" acima se possível.',
+      of: [{type: 'block'}],
+    }),
+    defineField({
+      name: 'challenge',
+      title: 'O Desafio',
+      type: 'array',
+      description: 'Descreva o problema que o cliente tinha.',
+      of: [{type: 'block'}],
+    }),
+    defineField({
+      name: 'solution',
+      title: 'A Solução',
+      type: 'array',
+      description: 'Descreva como a GAM resolveu o desafio.',
+      of: [{type: 'block'}],
     }),
     defineField({
       name: 'challengeAndSolution',
-      title: 'Desafio e Solução',
+      title: 'Desafio e Solução (Legado)',
       type: 'array',
-      of: [{ type: 'block' }],
+      description: 'OBS: Este campo é antigo. Use "O Desafio" e "A Solução".',
+      of: [{type: 'block'}],
     }),
   ],
 })
