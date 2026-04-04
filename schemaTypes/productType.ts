@@ -54,8 +54,17 @@ export const productType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'coverImage',
+      title: 'Imagem de Capa',
+      description: 'Imagem principal exibida nas listagens e na miniatura do Sanity.',
+      type: 'image',
+      options: {
+        hotspot: true,
+      },
+    }),
+    defineField({
       name: 'images',
-      title: 'Imagens do Produto',
+      title: 'Imagens Galeria do Produto',
       type: 'array',
       of: [
         defineArrayMember({
@@ -173,4 +182,20 @@ export const productType = defineType({
       ],
     }),
   ],
+  preview: {
+    select: {
+      title: 'name',
+      subtitle: 'shortDescription',
+      coverImage: 'coverImage',
+      images: 'images',
+    },
+    prepare(selection) {
+      const { title, subtitle, coverImage, images } = selection
+      return {
+        title: title,
+        subtitle: subtitle,
+        media: coverImage || (images && images.length > 0 ? images[0] : undefined),
+      }
+    }
+  }
 })
