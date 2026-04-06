@@ -178,6 +178,18 @@ export const productType = defineType({
       },
     }),
     defineField({
+      name: 'relatedProducts',
+      title: 'Produtos Correlatos',
+      type: 'array',
+      description: 'Selecione produtos que podem ser comprados em conjunto ou que são da mesma linha.',
+      of: [
+        defineArrayMember({
+          type: 'reference',
+          to: [{type: 'product'}],
+        }),
+      ],
+    }),
+    defineField({
       name: 'description',
       title: 'Texto Descritivo Principal',
       type: 'array',

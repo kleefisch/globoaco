@@ -113,6 +113,18 @@ export const projectType = defineType({
       ],
     }),
     defineField({
+      name: 'equipmentUsed',
+      title: 'Equipamentos da GAM Usados',
+      type: 'array',
+      description: 'Selecione os equipamentos da GAM que foram fornecidos e utilizados neste projeto.',
+      of: [
+        defineArrayMember({
+          type: 'reference',
+          to: [{type: 'product'}],
+        }),
+      ],
+    }),
+    defineField({
       name: 'challenge',
       title: 'O Desafio',
       type: 'array',
