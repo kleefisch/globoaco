@@ -43,6 +43,13 @@ export const productType = defineType({
       initialValue: false,
     }),
     defineField({
+      name: 'homeOrder',
+      title: 'Ordem na Home Page',
+      description:
+        'Define a ordem de exibição do produto na seção Nossas Soluções da página inicial (ex: 1, 2, 3...)',
+      type: 'number',
+    }),
+    defineField({
       name: 'featuredCatchphrase',
       title: 'Frase de Impacto (Destaque Home)',
       description:
@@ -181,7 +188,8 @@ export const productType = defineType({
       name: 'relatedProducts',
       title: 'Produtos Correlatos',
       type: 'array',
-      description: 'Selecione produtos que podem ser comprados em conjunto ou que são da mesma linha.',
+      description:
+        'Selecione produtos que podem ser comprados em conjunto ou que são da mesma linha.',
       of: [
         defineArrayMember({
           type: 'reference',
@@ -194,6 +202,29 @@ export const productType = defineType({
       title: 'Texto Descritivo Principal',
       type: 'array',
       of: [defineArrayMember({type: 'block'})],
+    }),
+    defineField({
+      name: 'seo',
+      title: 'SEO',
+      type: 'object',
+      options: {collapsible: true, collapsed: true},
+      fields: [
+        defineField({
+          name: 'metaTitle',
+          title: 'Meta Título',
+          type: 'string',
+          description: 'Recomendado até 60 caracteres',
+          validation: (rule) => rule.max(60),
+        }),
+        defineField({
+          name: 'metaDescription',
+          title: 'Meta Descrição',
+          type: 'text',
+          rows: 2,
+          description: 'Recomendado até 160 caracteres',
+          validation: (rule) => rule.max(160),
+        }),
+      ],
     }),
   ],
   preview: {

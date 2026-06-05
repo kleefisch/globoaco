@@ -36,6 +36,7 @@ export const postType = defineType({
       type: 'reference',
       to: [{type: 'postCategory'}],
       description: 'Pasta/Categoria em que a notícia se enquadra',
+      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'mainImage',
@@ -93,6 +94,29 @@ export const postType = defineType({
         defineArrayMember({
           type: 'image',
           options: {hotspot: true},
+        }),
+      ],
+    }),
+    defineField({
+      name: 'seo',
+      title: 'SEO',
+      type: 'object',
+      options: {collapsible: true, collapsed: true},
+      fields: [
+        defineField({
+          name: 'metaTitle',
+          title: 'Meta Título',
+          type: 'string',
+          description: 'Recomendado até 60 caracteres',
+          validation: (rule) => rule.max(60),
+        }),
+        defineField({
+          name: 'metaDescription',
+          title: 'Meta Descrição',
+          type: 'text',
+          rows: 2,
+          description: 'Recomendado até 160 caracteres',
+          validation: (rule) => rule.max(160),
         }),
       ],
     }),

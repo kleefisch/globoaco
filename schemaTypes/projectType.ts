@@ -24,6 +24,21 @@ export const projectType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'featuredOnHome',
+      title: 'Destacar na Home Page',
+      description:
+        'Marque esta opção para exibir este projeto na seção Projetos Entregues da página inicial.',
+      type: 'boolean',
+      initialValue: false,
+    }),
+    defineField({
+      name: 'homeOrder',
+      title: 'Ordem na Home Page',
+      description:
+        'Define a ordem de exibição do projeto na seção Projetos Entregues (ex: 1, 2, 3...)',
+      type: 'number',
+    }),
+    defineField({
       name: 'location',
       title: 'Localização',
       type: 'string',
@@ -73,11 +88,14 @@ export const projectType = defineType({
       type: 'string',
       description: 'Ex: 40 ton/h, 500 kg/lote',
     }),
+    // ATENÇÃO: Os documentos existentes armazenam este campo como string (ex: "Outubro/2023" ou "2023").
+    // Após esta mudança para type 'datetime', os valores antigos em string precisam ser migrados
+    // para o formato de data/hora ISO, caso contrário ficarão inválidos.
     defineField({
       name: 'deliveryDate',
-      title: 'Entregue Em (Data/Ano)',
-      type: 'string',
-      description: 'Ex: Outubro/2023 ou 2023',
+      title: 'Data de Entrega',
+      type: 'datetime',
+      description: 'Data de entrega do projeto',
     }),
     defineField({
       name: 'scale',
@@ -116,7 +134,8 @@ export const projectType = defineType({
       name: 'equipmentUsed',
       title: 'Equipamentos da GAM Usados',
       type: 'array',
-      description: 'Selecione os equipamentos da GAM que foram fornecidos e utilizados neste projeto.',
+      description:
+        'Selecione os equipamentos da GAM que foram fornecidos e utilizados neste projeto.',
       of: [
         defineArrayMember({
           type: 'reference',
