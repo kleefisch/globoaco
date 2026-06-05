@@ -8,8 +8,10 @@ import {testimonialType} from './testimonialType'
 import {newsletterType} from './newsletterType'
 import {aboutType} from './aboutType'
 import {teamMemberType} from './teamMemberType'
+import {heroSlideType} from './heroSlideType'
 
 export const schemaTypes = [
+  heroSlideType,
   categoryType,
   productType,
   authorType,
