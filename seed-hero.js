@@ -31,7 +31,7 @@ async function seed() {
     _id: SLIDE_ID,
     _type: 'heroSlide',
     tag: 'Engenharia 100% Brasileira',
-    title: 'Sua fábrica de **ração** começa aqui.',
+    title: 'Sua fábrica de\n**ração** começa aqui.',
     description:
       'De 500 kg a dezenas de toneladas por dia — projetamos, fabricamos e entregamos a solução completa para você produzir com autonomia, eficiência e resultado.',
     mediaType: 'image',
