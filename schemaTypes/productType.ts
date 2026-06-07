@@ -1,5 +1,7 @@
 import {defineType, defineField, defineArrayMember} from 'sanity'
 import {PackageIcon} from '@sanity/icons'
+import {richTextOf} from './richText'
+import {cardHighlightsField} from './cardHighlights'
 
 export const productType = defineType({
   name: 'product',
@@ -143,6 +145,9 @@ export const productType = defineType({
         }),
       ],
     }),
+    cardHighlightsField(
+      'Destaques exibidos no card azul lateral, cada um com um ícone à escolha. Se vazio, usa as primeiras especificações.',
+    ),
     defineField({
       name: 'datasheet',
       title: 'Arquivo PDF (Datasheet/Manual)',
@@ -214,90 +219,7 @@ export const productType = defineType({
       name: 'description',
       title: 'Texto Descritivo Principal',
       type: 'array',
-      of: [
-        defineArrayMember({
-          type: 'block',
-          // Estilos de bloco (parágrafo, títulos, citação)
-          styles: [
-            {title: 'Parágrafo', value: 'normal'},
-            {title: 'Título (H2)', value: 'h2'},
-            {title: 'Subtítulo (H3)', value: 'h3'},
-            {title: 'Citação', value: 'blockquote'},
-          ],
-          // Listas
-          lists: [
-            {title: 'Lista (bullets)', value: 'bullet'},
-            {title: 'Lista numerada', value: 'number'},
-          ],
-          marks: {
-            // Formatação inline
-            decorators: [
-              {title: 'Negrito', value: 'strong'},
-              {title: 'Itálico', value: 'em'},
-              {title: 'Sublinhado', value: 'underline'},
-            ],
-            // Anotações: cores da marca + link
-            annotations: [
-              {
-                name: 'color',
-                title: 'Cor do texto',
-                type: 'object',
-                fields: [
-                  defineField({
-                    name: 'value',
-                    title: 'Cor',
-                    type: 'string',
-                    options: {
-                      list: [
-                        {title: 'Laranja (destaque)', value: 'accent'},
-                        {title: 'Azul (primária)', value: 'primary'},
-                        {title: 'Verde (positivo)', value: 'green'},
-                        {title: 'Vermelho (atenção)', value: 'red'},
-                      ],
-                      layout: 'radio',
-                    },
-                    validation: (rule) => rule.required(),
-                  }),
-                ],
-              },
-              {
-                name: 'link',
-                title: 'Link',
-                type: 'object',
-                fields: [
-                  defineField({
-                    name: 'href',
-                    title: 'URL',
-                    type: 'url',
-                    validation: (rule) =>
-                      rule.uri({allowRelative: true, scheme: ['http', 'https', 'mailto', 'tel']}),
-                  }),
-                ],
-              },
-            ],
-          },
-        }),
-        // Divisor / linha separadora entre seções
-        defineArrayMember({
-          name: 'divider',
-          title: 'Divisor (linha separadora)',
-          type: 'object',
-          fields: [
-            defineField({
-              name: 'style',
-              title: 'Estilo',
-              type: 'string',
-              options: {
-                list: [{title: 'Linha simples', value: 'line'}],
-              },
-              initialValue: 'line',
-            }),
-          ],
-          preview: {
-            prepare: () => ({title: '— Divisor —'}),
-          },
-        }),
-      ],
+      of: richTextOf,
     }),
     defineField({
       name: 'seo',

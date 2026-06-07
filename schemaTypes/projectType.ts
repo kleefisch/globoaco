@@ -1,5 +1,7 @@
 import {defineType, defineField, defineArrayMember} from 'sanity'
 import {CheckmarkIcon} from '@sanity/icons'
+import {richTextOf} from './richText'
+import {cardHighlightsField} from './cardHighlights'
 
 export const projectType = defineType({
   name: 'project',
@@ -103,11 +105,14 @@ export const projectType = defineType({
       type: 'string',
       description: 'Ex: Grande Porte, Industrial, Compacta',
     }),
+    cardHighlightsField(
+      'Destaques exibidos no card azul lateral, cada um com um ícone à escolha. Se vazio, usa as informações do projeto (tipo, capacidade, localização, etc.).',
+    ),
     defineField({
       name: 'overview',
       title: 'Visão Geral (Overview)',
       type: 'array',
-      of: [{type: 'block'}],
+      of: richTextOf,
     }),
     defineField({
       name: 'equipmentList',
@@ -148,14 +153,14 @@ export const projectType = defineType({
       title: 'O Desafio',
       type: 'array',
       description: 'Descreva o problema que o cliente tinha.',
-      of: [{type: 'block'}],
+      of: richTextOf,
     }),
     defineField({
       name: 'solution',
       title: 'A Solução',
       type: 'array',
       description: 'Descreva como a GAM resolveu o desafio.',
-      of: [{type: 'block'}],
+      of: richTextOf,
     }),
   ],
 })
