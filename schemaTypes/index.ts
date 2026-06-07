@@ -1,4 +1,5 @@
 import {categoryType} from './categoryType'
+import {productLineType} from './productLineType'
 import {productType} from './productType'
 import {authorType} from './authorType'
 import {postType} from './postType'
@@ -13,6 +14,7 @@ import {heroSlideType} from './heroSlideType'
 export const schemaTypes = [
   heroSlideType,
   categoryType,
+  productLineType,
   productType,
   authorType,
   postType,
