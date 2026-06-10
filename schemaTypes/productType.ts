@@ -107,12 +107,17 @@ export const productType = defineType({
         }),
       ],
     }),
+    // ATENÇÃO: campo migrado de 'text' (string) para texto rico. Produtos antigos
+    // que tinham texto simples precisam ser reeditados aqui. O card da listagem,
+    // SEO e preview extraem o texto puro automaticamente (pt::text).
     defineField({
       name: 'shortDescription',
       title: 'Resumo Técnico',
-      type: 'text',
+      type: 'array',
+      of: richTextOf,
       description:
-        'Breve descrição que aparece no card do produto na listagem e na parte superior da página.',
+        'Resumo que aparece abaixo das fotos na página do produto (com edição rica). ' +
+        'O texto puro também alimenta o card na listagem e a meta description de SEO.',
     }),
     defineField({
       name: 'specifications',
@@ -254,9 +259,18 @@ export const productType = defineType({
     },
     prepare(selection) {
       const {title, subtitle, coverImage, images} = selection
+      // subtitle agora é Portable Text (array de blocos); extrai o texto puro.
+      let subtitleText = ''
+      if (Array.isArray(subtitle)) {
+        const first = subtitle.find((b) => b._type === 'block')
+        subtitleText =
+          first?.children?.map((c: {text?: string}) => c.text || '').join('') || ''
+      } else if (typeof subtitle === 'string') {
+        subtitleText = subtitle
+      }
       return {
         title: title,
-        subtitle: subtitle,
+        subtitle: subtitleText,
         media: coverImage || (images && images.length > 0 ? images[0] : undefined),
       }
     },

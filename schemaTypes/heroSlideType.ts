@@ -49,7 +49,9 @@ export const heroSlideType = defineType({
     }),
     defineField({
       name: 'image',
-      title: 'Imagem de capa',
+      title: 'Imagem de capa — Desktop/Web (paisagem)',
+      description:
+        'Imagem exibida no computador (proporção larga ~16:9). Use o recorte/hotspot para definir o foco.',
       type: 'image',
       options: {hotspot: true},
       fields: [
@@ -60,10 +62,22 @@ export const heroSlideType = defineType({
         rule.custom((value, context) => {
           const parent = context.parent as {mediaType?: string}
           if (parent?.mediaType === 'image' && !value) {
-            return 'Envie a imagem de capa.'
+            return 'Envie a imagem de capa (Desktop).'
           }
           return true
         }),
+    }),
+    defineField({
+      name: 'imageMobile',
+      title: 'Imagem de capa — Mobile (retrato, opcional)',
+      description:
+        'Versão para celular (proporção mais alta ~4:5). Se não enviar, o site usa a imagem de Desktop no celular também.',
+      type: 'image',
+      options: {hotspot: true},
+      fields: [
+        defineField({name: 'alt', title: 'Texto alternativo', type: 'string'}),
+      ],
+      hidden: ({parent}) => parent?.mediaType !== 'image',
     }),
     defineField({
       name: 'video',
