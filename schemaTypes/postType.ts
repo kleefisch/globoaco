@@ -1,5 +1,6 @@
 import {defineType, defineField, defineArrayMember} from 'sanity'
 import {DocumentTextIcon} from '@sanity/icons'
+import {articleBodyOf} from './articleBody'
 
 export const postType = defineType({
   name: 'post',
@@ -89,13 +90,7 @@ export const postType = defineType({
       name: 'body',
       title: 'Corpo do Texto (Rich Text)',
       type: 'array',
-      of: [
-        defineArrayMember({type: 'block'}),
-        defineArrayMember({
-          type: 'image',
-          options: {hotspot: true},
-        }),
-      ],
+      of: articleBodyOf,
     }),
     defineField({
       name: 'seo',
