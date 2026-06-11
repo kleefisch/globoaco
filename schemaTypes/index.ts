@@ -10,9 +10,13 @@ import {newsletterType} from './newsletterType'
 import {aboutType} from './aboutType'
 import {teamMemberType} from './teamMemberType'
 import {heroSlideType} from './heroSlideType'
+import {productionLineType} from './productionLineType'
+import {segmentType} from './segmentType'
 
 export const schemaTypes = [
   heroSlideType,
+  productionLineType,
+  segmentType,
   categoryType,
   productLineType,
   productType,
