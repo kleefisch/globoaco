@@ -65,16 +65,20 @@ export const solucaoIndustrialType = defineType({
       validation: (rule) => rule.required().min(1),
     }),
     defineField({
-      name: 'tipo',
+      name: 'category',
       title: 'Categoria',
-      description: 'Categoria/tipo exibido no card e abaixo do nome (ex: Ensacadeira, Esteira, Misturador).',
-      type: 'string',
+      description:
+        'Categoria do equipamento (compartilhada com o agro — ex: Misturadores, Roscas, Ensacadeiras). ' +
+        'Usada no filtro por categoria da página de Soluções.',
+      type: 'reference',
+      to: [{type: 'category'}],
     }),
     defineField({
       name: 'line',
       title: 'Linha',
-      description: 'Linha da solução (texto livre). Exibida abaixo do nome na página.',
-      type: 'string',
+      description: 'Linha do produto (lista controlada, compartilhada com o agro).',
+      type: 'reference',
+      to: [{type: 'productLine'}],
     }),
     defineField({
       name: 'model',
@@ -224,10 +228,10 @@ export const solucaoIndustrialType = defineType({
     }),
   ],
   preview: {
-    select: {title: 'name', tipo: 'tipo', media: 'coverImage', setores: 'setores'},
-    prepare({title, tipo, media, setores}) {
+    select: {title: 'name', categoria: 'category.title', media: 'coverImage', setores: 'setores'},
+    prepare({title, categoria, media, setores}) {
       const setorLabel = Array.isArray(setores) && setores.length ? setores.length + ' setor(es)' : ''
-      return {title, subtitle: [tipo, setorLabel].filter(Boolean).join(' · '), media}
+      return {title, subtitle: [categoria, setorLabel].filter(Boolean).join(' · '), media}
     },
   },
 })

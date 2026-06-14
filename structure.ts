@@ -14,8 +14,6 @@ export const structure: StructureResolver = (S) =>
               S.documentTypeListItem('product').title('Produtos (Agro)'),
               S.documentTypeListItem('productionLine').title('Fábricas Completas'),
               S.documentTypeListItem('segment').title('Segmentos (por animal)'),
-              S.documentTypeListItem('category').title('Categorias'),
-              S.documentTypeListItem('productLine').title('Linhas de Produto'),
             ]),
         ),
 
@@ -27,6 +25,17 @@ export const structure: StructureResolver = (S) =>
             .items([
               S.documentTypeListItem('solucaoIndustrial').title('Soluções Industriais'),
               S.documentTypeListItem('linhaIntegrada').title('Linhas Integradas'),
+            ]),
+        ),
+
+      S.listItem()
+        .title('🏷️ Taxonomia (compartilhada)')
+        .child(
+          S.list()
+            .title('Taxonomia')
+            .items([
+              S.documentTypeListItem('category').title('Categorias'),
+              S.documentTypeListItem('productLine').title('Linhas de Produto'),
             ]),
         ),
 
