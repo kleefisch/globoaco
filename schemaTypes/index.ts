@@ -12,11 +12,15 @@ import {teamMemberType} from './teamMemberType'
 import {heroSlideType} from './heroSlideType'
 import {productionLineType} from './productionLineType'
 import {segmentType} from './segmentType'
+import {solucaoIndustrialType} from './solucaoIndustrialType'
+import {linhaIntegradaType} from './linhaIntegradaType'
 
 export const schemaTypes = [
   heroSlideType,
   productionLineType,
   segmentType,
+  solucaoIndustrialType,
+  linhaIntegradaType,
   categoryType,
   productLineType,
   productType,
