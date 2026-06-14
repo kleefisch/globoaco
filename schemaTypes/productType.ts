@@ -183,6 +183,7 @@ export const productType = defineType({
           {title: 'Suínos', value: 'suino'},
           {title: 'Aves', value: 'aves'},
           {title: 'Equinos', value: 'equino'},
+          {title: 'Peixes', value: 'peixe'},
           {title: 'Pets', value: 'pet'},
           {title: 'Caprinos/Ovinos', value: 'caprino'},
           {title: 'Outros', value: 'outros'},
@@ -191,20 +192,20 @@ export const productType = defineType({
       },
     }),
     defineField({
-      name: 'productionScale',
-      title: 'Porte de Produção (Escala de 1 a 5)',
-      description: '1 = Pequeno Produtor/Iniciante, 5 = Grande Indústria de Alta Demanda',
-      type: 'number',
-      validation: (rule) => rule.min(1).max(5).integer(),
+      name: 'productionScales',
+      title: 'Portes de Produção Atendidos',
+      description:
+        'Marque todos os portes que este equipamento atende — um mesmo equipamento pode servir do pequeno ao grande produtor.',
+      type: 'array',
+      of: [{type: 'string'}],
       options: {
         list: [
-          {title: 'Empreendedor/Inicial (1)', value: 1},
-          {title: 'Pequeno Produtor (2)', value: 2},
-          {title: 'Média Produção (3)', value: 3},
-          {title: 'Semi-Industrial (4)', value: 4},
-          {title: 'Grande Indústria (5)', value: 5},
+          {title: 'Pequeno produtor', value: 'pequeno'},
+          {title: 'Médio porte', value: 'medio'},
+          {title: 'Grande porte', value: 'grande'},
+          {title: 'Industrial', value: 'industrial'},
         ],
-        layout: 'radio',
+        layout: 'grid',
       },
     }),
     defineField({
@@ -225,6 +226,34 @@ export const productType = defineType({
       title: 'Texto Descritivo Principal',
       type: 'array',
       of: richTextOf,
+    }),
+    defineField({
+      name: 'faq',
+      title: 'Perguntas Frequentes (FAQ)',
+      description:
+        'Opcional. Se preenchido, substitui o FAQ padrão do site nesta página de produto.',
+      type: 'array',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'question',
+              title: 'Pergunta',
+              type: 'string',
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'answer',
+              title: 'Resposta',
+              type: 'text',
+              rows: 3,
+              validation: (rule) => rule.required(),
+            }),
+          ],
+          preview: {select: {title: 'question', subtitle: 'answer'}},
+        }),
+      ],
     }),
     defineField({
       name: 'seo',
