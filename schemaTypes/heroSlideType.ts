@@ -8,11 +8,35 @@ export const heroSlideType = defineType({
   icon: ImagesIcon,
   fields: [
     defineField({
+      name: 'layoutMode',
+      title: 'Modo do slide',
+      description:
+        'Escolha "Completo" para usar tag, título, descrição e botões. Escolha "Somente imagem clicável" para usar o banner como peça única.',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'Completo com texto e botões', value: 'content'},
+          {title: 'Somente imagem clicável', value: 'imageOnly'},
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'content',
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
       name: 'tag',
       title: 'Tag (selo superior)',
       description: 'Texto curto exibido no selo acima do título. Ex: "Engenharia 100% Brasileira".',
       type: 'string',
-      validation: (rule) => rule.required(),
+      hidden: ({parent}) => parent?.layoutMode === 'imageOnly',
+      validation: (rule) =>
+        rule.custom((value, context) => {
+          const parent = context.parent as {layoutMode?: string}
+          if (parent?.layoutMode !== 'imageOnly' && !value) {
+            return 'Informe a tag do slide.'
+          }
+          return true
+        }),
     }),
     defineField({
       name: 'title',
@@ -22,14 +46,30 @@ export const heroSlideType = defineType({
         'Ex: "Sua fábrica de **ração** começa aqui." Use quebra de linha normal (Enter) onde quiser.',
       type: 'text',
       rows: 3,
-      validation: (rule) => rule.required(),
+      hidden: ({parent}) => parent?.layoutMode === 'imageOnly',
+      validation: (rule) =>
+        rule.custom((value, context) => {
+          const parent = context.parent as {layoutMode?: string}
+          if (parent?.layoutMode !== 'imageOnly' && !value) {
+            return 'Informe o título do slide.'
+          }
+          return true
+        }),
     }),
     defineField({
       name: 'description',
       title: 'Descrição',
       type: 'text',
       rows: 3,
-      validation: (rule) => rule.required(),
+      hidden: ({parent}) => parent?.layoutMode === 'imageOnly',
+      validation: (rule) =>
+        rule.custom((value, context) => {
+          const parent = context.parent as {layoutMode?: string}
+          if (parent?.layoutMode !== 'imageOnly' && !value) {
+            return 'Informe a descrição do slide.'
+          }
+          return true
+        }),
     }),
 
     // --- Mídia: imagem OU vídeo -------------------------------------------
@@ -117,24 +157,44 @@ export const heroSlideType = defineType({
       title: 'Botão principal — texto',
       type: 'string',
       initialValue: 'Explorar Soluções',
+      hidden: ({parent}) => parent?.layoutMode === 'imageOnly',
     }),
     defineField({
       name: 'primaryCtaHref',
       title: 'Botão principal — link',
       type: 'string',
       initialValue: '/solucoes',
+      hidden: ({parent}) => parent?.layoutMode === 'imageOnly',
     }),
     defineField({
       name: 'secondaryCtaLabel',
       title: 'Botão secundário — texto',
       type: 'string',
       initialValue: 'Falar com Especialista',
+      hidden: ({parent}) => parent?.layoutMode === 'imageOnly',
     }),
     defineField({
       name: 'secondaryCtaHref',
       title: 'Botão secundário — link',
       type: 'string',
       initialValue: '/contato',
+      hidden: ({parent}) => parent?.layoutMode === 'imageOnly',
+    }),
+    defineField({
+      name: 'imageClickHref',
+      title: 'Link ao clicar na imagem',
+      description:
+        'Usado no modo "Somente imagem clicável". Pode ser uma rota interna (/solucoes) ou uma URL completa.',
+      type: 'string',
+      hidden: ({parent}) => parent?.layoutMode !== 'imageOnly',
+      validation: (rule) =>
+        rule.custom((value, context) => {
+          const parent = context.parent as {layoutMode?: string}
+          if (parent?.layoutMode === 'imageOnly' && !value) {
+            return 'Informe o link do banner clicável.'
+          }
+          return true
+        }),
     }),
 
     // --- Ordenação / publicação -------------------------------------------
@@ -166,12 +226,15 @@ export const heroSlideType = defineType({
       order: 'order',
       media: 'image',
       mediaType: 'mediaType',
+      layoutMode: 'layoutMode',
     },
-    prepare({title, order, media, mediaType}) {
-      const clean = (title || 'Sem título').replace(/\*\*/g, '')
+    prepare({title, order, media, mediaType, layoutMode}) {
+      const clean = (title || 'Banner clicável').replace(/\*\*/g, '')
       return {
         title: clean,
-        subtitle: `Slide ${order ?? '?'} · ${mediaType === 'video' ? 'Vídeo' : 'Imagem'}`,
+        subtitle: `Slide ${order ?? '?'} · ${
+          layoutMode === 'imageOnly' ? 'Somente imagem clicável' : 'Completo'
+        } · ${mediaType === 'video' ? 'Vídeo' : 'Imagem'}`,
         media,
       }
     },
