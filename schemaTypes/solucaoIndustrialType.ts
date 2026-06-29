@@ -34,6 +34,14 @@ export const solucaoIndustrialType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'isActive',
+      title: 'Ativo no site',
+      description:
+        'Desative para ocultar esta solução do catálogo público sem apagar o cadastro.',
+      type: 'boolean',
+      initialValue: true,
+    }),
+    defineField({
       name: 'featuredOnHome',
       title: 'Destacar na Home Page',
       description:
@@ -228,10 +236,17 @@ export const solucaoIndustrialType = defineType({
     }),
   ],
   preview: {
-    select: {title: 'name', categoria: 'category.title', media: 'coverImage', setores: 'setores'},
-    prepare({title, categoria, media, setores}) {
+    select: {
+      title: 'name',
+      categoria: 'category.title',
+      media: 'coverImage',
+      setores: 'setores',
+      isActive: 'isActive',
+    },
+    prepare({title, categoria, media, setores, isActive}) {
       const setorLabel = Array.isArray(setores) && setores.length ? setores.length + ' setor(es)' : ''
-      return {title, subtitle: [categoria, setorLabel].filter(Boolean).join(' · '), media}
+      const subtitle = [categoria, setorLabel].filter(Boolean).join(' · ')
+      return {title, subtitle: isActive === false ? `INATIVO · ${subtitle}` : subtitle, media}
     },
   },
 })

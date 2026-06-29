@@ -26,6 +26,14 @@ export const linhaIntegradaType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'isActive',
+      title: 'Ativo no site',
+      description:
+        'Desative para ocultar esta linha integrada do catálogo público sem apagar o cadastro.',
+      type: 'boolean',
+      initialValue: true,
+    }),
+    defineField({
       name: 'setores',
       title: 'Setores atendidos',
       type: 'array',
@@ -195,9 +203,10 @@ export const linhaIntegradaType = defineType({
   ],
   orderings: [{title: 'Ordem', name: 'orderAsc', by: [{field: 'order', direction: 'asc'}]}],
   preview: {
-    select: {title: 'name', media: 'coverImage', capacity: 'capacity'},
-    prepare({title, media, capacity}) {
-      return {title, subtitle: capacity ? `Linha Integrada · ${capacity}` : 'Linha Integrada', media}
+    select: {title: 'name', media: 'coverImage', capacity: 'capacity', isActive: 'isActive'},
+    prepare({title, media, capacity, isActive}) {
+      const subtitle = capacity ? `Linha Integrada · ${capacity}` : 'Linha Integrada'
+      return {title, subtitle: isActive === false ? `INATIVO · ${subtitle}` : subtitle, media}
     },
   },
 })

@@ -1,4 +1,5 @@
 import {defineArrayMember, defineField} from 'sanity'
+import {tableBlock} from './tableBlock'
 
 /**
  * Definição compartilhada de "texto rico" (Portable Text) usada em campos de
@@ -91,4 +92,5 @@ export const richTextOf = [
       prepare: () => ({title: '— Divisor —'}),
     },
   }),
+  tableBlock,
 ]

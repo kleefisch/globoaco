@@ -1,4 +1,5 @@
 import {defineArrayMember, defineField} from 'sanity'
+import {tableBlock} from './tableBlock'
 
 /**
  * Texto rico COMPLETO para o corpo de artigos do blog.
@@ -178,4 +179,5 @@ export const articleBodyOf = [
       },
     },
   }),
+  tableBlock,
 ]

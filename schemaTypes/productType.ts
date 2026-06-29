@@ -37,6 +37,14 @@ export const productType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'isActive',
+      title: 'Ativo no site',
+      description:
+        'Desative para ocultar este equipamento do catálogo público sem apagar o cadastro.',
+      type: 'boolean',
+      initialValue: true,
+    }),
+    defineField({
       name: 'featuredOnHome',
       title: 'Destacar na Home Page',
       description:
@@ -285,9 +293,10 @@ export const productType = defineType({
       subtitle: 'shortDescription',
       coverImage: 'coverImage',
       images: 'images',
+      isActive: 'isActive',
     },
     prepare(selection) {
-      const {title, subtitle, coverImage, images} = selection
+      const {title, subtitle, coverImage, images, isActive} = selection
       // subtitle agora é Portable Text (array de blocos); extrai o texto puro.
       let subtitleText = ''
       if (Array.isArray(subtitle)) {
@@ -299,7 +308,7 @@ export const productType = defineType({
       }
       return {
         title: title,
-        subtitle: subtitleText,
+        subtitle: isActive === false ? `INATIVO · ${subtitleText}` : subtitleText,
         media: coverImage || (images && images.length > 0 ? images[0] : undefined),
       }
     },

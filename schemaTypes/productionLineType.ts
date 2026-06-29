@@ -24,6 +24,14 @@ export const productionLineType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'isActive',
+      title: 'Ativo no site',
+      description:
+        'Desative para ocultar esta fábrica completa do catálogo público sem apagar o cadastro.',
+      type: 'boolean',
+      initialValue: true,
+    }),
+    defineField({
       name: 'scale',
       title: 'Escala / Porte',
       description: 'Nível da linha — define em qual seção aparece.',
@@ -248,11 +256,18 @@ export const productionLineType = defineType({
     },
   ],
   preview: {
-    select: {title: 'name', scale: 'scale', media: 'coverImage', capacity: 'capacity'},
-    prepare({title, scale, media, capacity}) {
+    select: {
+      title: 'name',
+      scale: 'scale',
+      media: 'coverImage',
+      capacity: 'capacity',
+      isActive: 'isActive',
+    },
+    prepare({title, scale, media, capacity, isActive}) {
       const scaleLabel =
         {mini: 'Mini', compact: 'Compacta', industrial: 'Industrial'}[scale as string] || scale
-      return {title, subtitle: `${scaleLabel}${capacity ? ' · ' + capacity : ''}`, media}
+      const subtitle = `${scaleLabel}${capacity ? ' · ' + capacity : ''}`
+      return {title, subtitle: isActive === false ? `INATIVO · ${subtitle}` : subtitle, media}
     },
   },
 })
