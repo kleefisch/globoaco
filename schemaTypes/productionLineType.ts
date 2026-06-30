@@ -17,6 +17,15 @@ export const productionLineType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'alternativeNames',
+      title: 'Nomes Alternativos / Regionalismos',
+      description:
+        'Outros nomes pelos quais esta fábrica completa ou linha de produção é conhecida. Tecle Enter para adicionar.',
+      type: 'array',
+      of: [{type: 'string'}],
+      options: {layout: 'tags'},
+    }),
+    defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
@@ -30,6 +39,33 @@ export const productionLineType = defineType({
         'Desative para ocultar esta fábrica completa do catálogo público sem apagar o cadastro.',
       type: 'boolean',
       initialValue: true,
+    }),
+    defineField({
+      name: 'featuredCatchphrase',
+      title: 'Frase de Impacto (card)',
+      description: 'Curta frase exibida no card da listagem.',
+      type: 'string',
+    }),
+    defineField({
+      name: 'category',
+      title: 'Categoria',
+      description:
+        'Categoria da linha/fábrica, usando a mesma lista dos produtos avulsos quando fizer sentido.',
+      type: 'reference',
+      to: [{type: 'category'}],
+    }),
+    defineField({
+      name: 'line',
+      title: 'Linha',
+      description: 'Linha do produto/sistema, usando a mesma lista controlada dos produtos avulsos.',
+      type: 'reference',
+      to: [{type: 'productLine'}],
+    }),
+    defineField({
+      name: 'model',
+      title: 'Modelo',
+      description: 'Código/modelo da linha ou configuração. Ex: LF-500, Compacta 5T, Turn-key Pro.',
+      type: 'string',
     }),
     defineField({
       name: 'scale',
@@ -74,12 +110,6 @@ export const productionLineType = defineType({
       },
     }),
     defineField({
-      name: 'featuredCatchphrase',
-      title: 'Frase de Impacto (card)',
-      description: 'Curta frase exibida no card da listagem.',
-      type: 'string',
-    }),
-    defineField({
       name: 'coverImage',
       title: 'Imagem de Capa',
       type: 'image',
@@ -100,20 +130,19 @@ export const productionLineType = defineType({
     }),
     defineField({
       name: 'shortDescription',
-      title: 'Resumo (texto simples)',
-      description: 'Breve resumo para card/SEO.',
-      type: 'text',
-      rows: 3,
+      title: 'Resumo Técnico',
+      description:
+        'Resumo que aparece abaixo das fotos na página da fábrica completa (com edição rica). ' +
+        'O texto puro também alimenta o card na listagem e a meta description de SEO.',
+      type: 'array',
+      of: richTextOf,
     }),
 
-    // Destaques do card + specs (reuso dos helpers compartilhados)
-    cardHighlightsField(
-      'Destaques exibidos no card lateral (ex: capacidade, área, potência), cada um com um ícone à escolha.',
-    ),
     defineField({
       name: 'specifications',
       title: 'Especificações Técnicas',
       type: 'array',
+      description: 'Adicione características como Capacidade, Potência, Área ocupada, Dimensões, etc.',
       of: [
         defineArrayMember({
           type: 'object',
@@ -124,6 +153,61 @@ export const productionLineType = defineType({
           preview: {select: {title: 'property', subtitle: 'value'}},
         }),
       ],
+    }),
+    cardHighlightsField(
+      'Destaques exibidos no card azul lateral, cada um com um ícone à escolha. Se vazio, o card fica sem destaques.',
+    ),
+    defineField({
+      name: 'datasheet',
+      title: 'Arquivo PDF (Datasheet/Catálogo)',
+      type: 'file',
+      options: {accept: '.pdf'},
+    }),
+    defineField({
+      name: 'applications',
+      title: 'Aplicações (Ideal para)',
+      description:
+        'Ex: Ração Animal, Sal Mineral, Concentrados, Grãos, Suplementos. Pressione Enter para adicionar.',
+      type: 'array',
+      of: [{type: 'string'}],
+      options: {layout: 'tags'},
+    }),
+    defineField({
+      name: 'animalTypes',
+      title: 'Tipos de Animais Atendidos',
+      description: 'Selecione os tipos de animais para os quais esta fábrica completa pode produzir.',
+      type: 'array',
+      of: [{type: 'string'}],
+      options: {
+        list: [
+          {title: 'Bovinos', value: 'bovino'},
+          {title: 'Suínos', value: 'suino'},
+          {title: 'Aves', value: 'aves'},
+          {title: 'Equinos', value: 'equino'},
+          {title: 'Peixes', value: 'peixe'},
+          {title: 'Pets', value: 'pet'},
+          {title: 'Caprinos/Ovinos', value: 'caprino'},
+          {title: 'Outros', value: 'outros'},
+        ],
+        layout: 'grid',
+      },
+    }),
+    defineField({
+      name: 'productionScales',
+      title: 'Portes de Produção Atendidos',
+      description:
+        'Marque todos os portes que esta fábrica completa atende — pode servir do pequeno ao grande produtor.',
+      type: 'array',
+      of: [{type: 'string'}],
+      options: {
+        list: [
+          {title: 'Pequeno produtor', value: 'pequeno'},
+          {title: 'Médio porte', value: 'medio'},
+          {title: 'Grande porte', value: 'grande'},
+          {title: 'Industrial', value: 'industrial'},
+        ],
+        layout: 'grid',
+      },
     }),
 
     // O que está incluso (equipamentos da linha)
@@ -196,10 +280,32 @@ export const productionLineType = defineType({
       of: richTextOf,
     }),
     defineField({
-      name: 'datasheet',
-      title: 'Arquivo PDF (Datasheet/Catálogo)',
-      type: 'file',
-      options: {accept: '.pdf'},
+      name: 'faq',
+      title: 'Perguntas Frequentes (FAQ)',
+      description:
+        'Opcional. Se preenchido, substitui o FAQ padrão nesta página de fábrica completa.',
+      type: 'array',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'question',
+              title: 'Pergunta',
+              type: 'string',
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'answer',
+              title: 'Resposta',
+              type: 'text',
+              rows: 3,
+              validation: (rule) => rule.required(),
+            }),
+          ],
+          preview: {select: {title: 'question', subtitle: 'answer'}},
+        }),
+      ],
     }),
 
     // Prova social: cases entregues
@@ -258,15 +364,16 @@ export const productionLineType = defineType({
   preview: {
     select: {
       title: 'name',
+      category: 'category.title',
       scale: 'scale',
       media: 'coverImage',
       capacity: 'capacity',
       isActive: 'isActive',
     },
-    prepare({title, scale, media, capacity, isActive}) {
+    prepare({title, category, scale, media, capacity, isActive}) {
       const scaleLabel =
         {mini: 'Mini', compact: 'Compacta', industrial: 'Industrial'}[scale as string] || scale
-      const subtitle = `${scaleLabel}${capacity ? ' · ' + capacity : ''}`
+      const subtitle = [category, scaleLabel, capacity].filter(Boolean).join(' · ')
       return {title, subtitle: isActive === false ? `INATIVO · ${subtitle}` : subtitle, media}
     },
   },

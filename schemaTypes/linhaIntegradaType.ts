@@ -19,6 +19,15 @@ export const linhaIntegradaType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'alternativeNames',
+      title: 'Nomes Alternativos / Regionalismos',
+      description:
+        'Outros nomes pelos quais esta linha integrada é conhecida. Tecle Enter para adicionar.',
+      type: 'array',
+      of: [{type: 'string'}],
+      options: {layout: 'tags'},
+    }),
+    defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
@@ -34,6 +43,33 @@ export const linhaIntegradaType = defineType({
       initialValue: true,
     }),
     defineField({
+      name: 'featuredCatchphrase',
+      title: 'Frase de Impacto (card)',
+      description: 'Curta frase exibida no card da listagem.',
+      type: 'string',
+    }),
+    defineField({
+      name: 'category',
+      title: 'Categoria',
+      description:
+        'Categoria da linha integrada, usando a mesma lista dos produtos avulsos quando fizer sentido.',
+      type: 'reference',
+      to: [{type: 'category'}],
+    }),
+    defineField({
+      name: 'line',
+      title: 'Linha',
+      description: 'Linha do produto/sistema, usando a mesma lista controlada dos produtos avulsos.',
+      type: 'reference',
+      to: [{type: 'productLine'}],
+    }),
+    defineField({
+      name: 'model',
+      title: 'Modelo',
+      description: 'Código/modelo da linha integrada. Ex: LI-600, Ensacamento Pro, Sistema 20T.',
+      type: 'string',
+    }),
+    defineField({
       name: 'setores',
       title: 'Setores atendidos',
       type: 'array',
@@ -45,11 +81,6 @@ export const linhaIntegradaType = defineType({
       name: 'capacity',
       title: 'Capacidade',
       description: 'Ex: 600 sacos/h, 20 ton/h',
-      type: 'string',
-    }),
-    defineField({
-      name: 'featuredCatchphrase',
-      title: 'Frase de Impacto (card)',
       type: 'string',
     }),
     defineField({
@@ -73,15 +104,18 @@ export const linhaIntegradaType = defineType({
     }),
     defineField({
       name: 'shortDescription',
-      title: 'Resumo (texto simples)',
-      type: 'text',
-      rows: 3,
+      title: 'Resumo Técnico',
+      description:
+        'Resumo que aparece abaixo das fotos na página da linha integrada (com edição rica). ' +
+        'O texto puro também alimenta o card na listagem e a meta description de SEO.',
+      type: 'array',
+      of: richTextOf,
     }),
-    cardHighlightsField('Destaques do card lateral, cada um com ícone.'),
     defineField({
       name: 'specifications',
       title: 'Especificações Técnicas',
       type: 'array',
+      description: 'Adicione características como Capacidade, Potência, Dimensões, Área ocupada, etc.',
       of: [
         defineArrayMember({
           type: 'object',
@@ -92,6 +126,40 @@ export const linhaIntegradaType = defineType({
           preview: {select: {title: 'property', subtitle: 'value'}},
         }),
       ],
+    }),
+    cardHighlightsField(
+      'Destaques exibidos no card azul lateral, cada um com um ícone à escolha. Se vazio, o card fica sem destaques.',
+    ),
+    defineField({
+      name: 'datasheet',
+      title: 'Arquivo PDF (Datasheet/Catálogo)',
+      type: 'file',
+      options: {accept: '.pdf'},
+    }),
+    defineField({
+      name: 'applications',
+      title: 'Aplicações / Materiais',
+      description: 'O que a linha processa/embala (ex: Areia, Pedras, Cimento).',
+      type: 'array',
+      of: [{type: 'string'}],
+      options: {layout: 'tags'},
+    }),
+    defineField({
+      name: 'productionScales',
+      title: 'Portes de Produção Atendidos',
+      description:
+        'Marque todos os portes que esta linha integrada atende — pode servir do pequeno ao grande porte.',
+      type: 'array',
+      of: [{type: 'string'}],
+      options: {
+        list: [
+          {title: 'Pequeno porte', value: 'pequeno'},
+          {title: 'Médio porte', value: 'medio'},
+          {title: 'Grande porte', value: 'grande'},
+          {title: 'Industrial', value: 'industrial'},
+        ],
+        layout: 'grid',
+      },
     }),
     defineField({
       name: 'includedEquipment',
@@ -149,24 +217,38 @@ export const linhaIntegradaType = defineType({
       ],
     }),
     defineField({
-      name: 'applications',
-      title: 'Aplicações / Materiais',
-      description: 'O que a linha processa/embala (ex: Areia, Pedras, Cimento).',
-      type: 'array',
-      of: [{type: 'string'}],
-      options: {layout: 'tags'},
-    }),
-    defineField({
       name: 'description',
       title: 'Descrição Detalhada (texto rico)',
       type: 'array',
       of: richTextOf,
     }),
     defineField({
-      name: 'datasheet',
-      title: 'Arquivo PDF (Datasheet/Catálogo)',
-      type: 'file',
-      options: {accept: '.pdf'},
+      name: 'faq',
+      title: 'Perguntas Frequentes (FAQ)',
+      description:
+        'Opcional. Se preenchido, substitui o FAQ padrão nesta página de linha integrada.',
+      type: 'array',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'question',
+              title: 'Pergunta',
+              type: 'string',
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'answer',
+              title: 'Resposta',
+              type: 'text',
+              rows: 3,
+              validation: (rule) => rule.required(),
+            }),
+          ],
+          preview: {select: {title: 'question', subtitle: 'answer'}},
+        }),
+      ],
     }),
     defineField({
       name: 'relatedProjects',
@@ -203,9 +285,15 @@ export const linhaIntegradaType = defineType({
   ],
   orderings: [{title: 'Ordem', name: 'orderAsc', by: [{field: 'order', direction: 'asc'}]}],
   preview: {
-    select: {title: 'name', media: 'coverImage', capacity: 'capacity', isActive: 'isActive'},
-    prepare({title, media, capacity, isActive}) {
-      const subtitle = capacity ? `Linha Integrada · ${capacity}` : 'Linha Integrada'
+    select: {
+      title: 'name',
+      category: 'category.title',
+      media: 'coverImage',
+      capacity: 'capacity',
+      isActive: 'isActive',
+    },
+    prepare({title, category, media, capacity, isActive}) {
+      const subtitle = [category || 'Linha Integrada', capacity].filter(Boolean).join(' · ')
       return {title, subtitle: isActive === false ? `INATIVO · ${subtitle}` : subtitle, media}
     },
   },
