@@ -2,18 +2,22 @@ import {defineType, defineField, defineArrayMember} from 'sanity'
 import {ComponentIcon} from '@sanity/icons'
 import {richTextOf} from './richText'
 import {cardHighlightsField, cardHighlightIcons} from './cardHighlights'
+import {commercialFieldGroups} from './commercialFieldGroups'
+import {applicationSectionsField} from './applicationSections'
 
 export const productionLineType = defineType({
   name: 'productionLine',
   title: 'Linha de Produção (Fábrica Completa)',
   type: 'document',
   icon: ComponentIcon,
+  groups: commercialFieldGroups,
   fields: [
     defineField({
       name: 'name',
       title: 'Nome da Linha',
       description: 'Ex: Linha Compacta 5 ton/h, Mini-Fábrica Horizontal 500',
       type: 'string',
+      group: 'basic',
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -24,12 +28,14 @@ export const productionLineType = defineType({
       type: 'array',
       of: [{type: 'string'}],
       options: {layout: 'tags'},
+      group: 'basic',
     }),
     defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
       options: {source: 'name', maxLength: 96},
+      group: 'basic',
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -39,12 +45,14 @@ export const productionLineType = defineType({
         'Desative para ocultar esta fábrica completa do catálogo público sem apagar o cadastro.',
       type: 'boolean',
       initialValue: true,
+      group: 'basic',
     }),
     defineField({
       name: 'featuredCatchphrase',
       title: 'Frase de Impacto (card)',
       description: 'Curta frase exibida no card da listagem.',
       type: 'string',
+      group: 'basic',
     }),
     defineField({
       name: 'category',
@@ -53,6 +61,7 @@ export const productionLineType = defineType({
         'Categoria da linha/fábrica, usando a mesma lista dos produtos avulsos quando fizer sentido.',
       type: 'reference',
       to: [{type: 'category'}],
+      group: 'classification',
     }),
     defineField({
       name: 'line',
@@ -60,12 +69,14 @@ export const productionLineType = defineType({
       description: 'Linha do produto/sistema, usando a mesma lista controlada dos produtos avulsos.',
       type: 'reference',
       to: [{type: 'productLine'}],
+      group: 'classification',
     }),
     defineField({
       name: 'model',
       title: 'Modelo',
       description: 'Código/modelo da linha ou configuração. Ex: LF-500, Compacta 5T, Turn-key Pro.',
       type: 'string',
+      group: 'classification',
     }),
     defineField({
       name: 'scale',
@@ -80,6 +91,7 @@ export const productionLineType = defineType({
         ],
         layout: 'radio',
       },
+      group: 'classification',
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -87,6 +99,7 @@ export const productionLineType = defineType({
       title: 'Capacidade',
       description: 'Ex: 500 kg/h, 1,5 a 5 ton/h',
       type: 'string',
+      group: 'classification',
     }),
     defineField({
       name: 'segments',
@@ -108,12 +121,14 @@ export const productionLineType = defineType({
         ],
         layout: 'grid',
       },
+      group: 'classification',
     }),
     defineField({
       name: 'coverImage',
       title: 'Imagem de Capa',
       type: 'image',
       options: {hotspot: true},
+      group: 'media',
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -127,6 +142,7 @@ export const productionLineType = defineType({
           fields: [defineField({name: 'alt', title: 'Texto alternativo', type: 'string'})],
         }),
       ],
+      group: 'media',
     }),
     defineField({
       name: 'shortDescription',
@@ -136,6 +152,7 @@ export const productionLineType = defineType({
         'O texto puro também alimenta o card na listagem e a meta description de SEO.',
       type: 'array',
       of: richTextOf,
+      group: 'technical',
     }),
 
     defineField({
@@ -143,6 +160,7 @@ export const productionLineType = defineType({
       title: 'Especificações Técnicas',
       type: 'array',
       description: 'Adicione características como Capacidade, Potência, Área ocupada, Dimensões, etc.',
+      group: 'technical',
       of: [
         defineArrayMember({
           type: 'object',
@@ -156,12 +174,14 @@ export const productionLineType = defineType({
     }),
     cardHighlightsField(
       'Destaques exibidos no card azul lateral, cada um com um ícone à escolha. Se vazio, o card fica sem destaques.',
+      'technical',
     ),
     defineField({
       name: 'datasheet',
       title: 'Arquivo PDF (Datasheet/Catálogo)',
       type: 'file',
       options: {accept: '.pdf'},
+      group: 'media',
     }),
     defineField({
       name: 'applications',
@@ -171,6 +191,7 @@ export const productionLineType = defineType({
       type: 'array',
       of: [{type: 'string'}],
       options: {layout: 'tags'},
+      group: 'applications',
     }),
     defineField({
       name: 'animalTypes',
@@ -191,6 +212,7 @@ export const productionLineType = defineType({
         ],
         layout: 'grid',
       },
+      group: 'applications',
     }),
     defineField({
       name: 'productionScales',
@@ -208,7 +230,9 @@ export const productionLineType = defineType({
         ],
         layout: 'grid',
       },
+      group: 'applications',
     }),
+    applicationSectionsField(),
 
     // O que está incluso (equipamentos da linha)
     defineField({
@@ -216,6 +240,7 @@ export const productionLineType = defineType({
       title: 'O que está incluso (Equipamentos)',
       description: 'Equipamentos que compõem a linha. Vincule aos produtos do catálogo quando existirem.',
       type: 'array',
+      group: 'system',
       of: [
         defineArrayMember({
           type: 'object',
@@ -249,6 +274,7 @@ export const productionLineType = defineType({
       title: 'Fluxo de Produção (etapas)',
       description: 'Etapas do processo (ex: Moagem → Dosagem → Mistura → Ensaque).',
       type: 'array',
+      group: 'system',
       of: [
         defineArrayMember({
           type: 'object',
@@ -278,6 +304,7 @@ export const productionLineType = defineType({
       title: 'Descrição Detalhada (texto rico)',
       type: 'array',
       of: richTextOf,
+      group: 'content',
     }),
     defineField({
       name: 'faq',
@@ -285,6 +312,7 @@ export const productionLineType = defineType({
       description:
         'Opcional. Se preenchido, substitui o FAQ padrão nesta página de fábrica completa.',
       type: 'array',
+      group: 'content',
       of: [
         defineArrayMember({
           type: 'object',
@@ -314,12 +342,14 @@ export const productionLineType = defineType({
       title: 'Cases Relacionados (Projetos entregues)',
       type: 'array',
       of: [defineArrayMember({type: 'reference', to: [{type: 'project'}]})],
+      group: 'relations',
     }),
     defineField({
       name: 'relatedLines',
       title: 'Linhas Relacionadas',
       type: 'array',
       of: [defineArrayMember({type: 'reference', to: [{type: 'productionLine'}]})],
+      group: 'relations',
     }),
 
     defineField({
@@ -327,6 +357,7 @@ export const productionLineType = defineType({
       title: 'Ordem de Exibição',
       description: 'Ordem dentro da escala (ex: 1, 2, 3...).',
       type: 'number',
+      group: 'basic',
     }),
 
     defineField({
@@ -334,6 +365,7 @@ export const productionLineType = defineType({
       title: 'SEO',
       type: 'object',
       options: {collapsible: true, collapsed: true},
+      group: 'seo',
       fields: [
         defineField({
           name: 'metaTitle',

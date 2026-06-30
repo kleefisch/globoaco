@@ -69,12 +69,13 @@ export const cardHighlightIcons = [
  * Campo "Destaques do Card" reutilizável.
  * @param description Texto de ajuda específico do contexto (produto/projeto).
  */
-export function cardHighlightsField(description: string) {
+export function cardHighlightsField(description: string, group?: string) {
   return defineField({
     name: 'cardHighlights',
     title: 'Destaques do Card (lateral)',
     description,
     type: 'array',
+    group,
     of: [
       defineArrayMember({
         type: 'object',

@@ -1,41 +1,49 @@
 import type {StructureResolver} from 'sanity/structure'
 
-// Organiza o Studio em grupos: Agro, Outros Setores e Conteúdo & Site.
+// Organiza o Studio pelo fluxo editorial real: catálogo, taxonomias e conteúdo institucional.
 export const structure: StructureResolver = (S) =>
   S.list()
     .title('Conteúdo')
     .items([
       S.listItem()
-        .title('🌾 Gerenciamento Agro')
+        .title('📦 Catálogo Comercial')
         .child(
           S.list()
-            .title('Agro')
+            .title('Catálogo Comercial')
             .items([
-              S.documentTypeListItem('product').title('Produtos (Agro)'),
-              S.documentTypeListItem('productionLine').title('Fábricas Completas'),
-              S.documentTypeListItem('segment').title('Segmentos (por animal)'),
+              S.listItem()
+                .title('Avulsos')
+                .child(
+                  S.list()
+                    .title('Soluções Avulsas')
+                    .items([
+                      S.documentTypeListItem('product').title('Produtos Avulsos Agro'),
+                      S.documentTypeListItem('solucaoIndustrial').title('Soluções Industriais Avulsas'),
+                    ]),
+                ),
+              S.listItem()
+                .title('Sistemas completos')
+                .child(
+                  S.list()
+                    .title('Fábricas e Linhas')
+                    .items([
+                      S.documentTypeListItem('productionLine').title('Fábricas Completas Agro'),
+                      S.documentTypeListItem('linhaIntegrada').title('Linhas Integradas / Outros Setores'),
+                    ]),
+                ),
+              S.documentTypeListItem('segment').title('Páginas por Aplicação Agro'),
             ]),
         ),
 
       S.listItem()
-        .title('🏭 Outros Setores')
+        .title('🏷️ Taxonomias & Menus')
         .child(
           S.list()
-            .title('Outros Setores')
-            .items([
-              S.documentTypeListItem('solucaoIndustrial').title('Soluções Industriais'),
-              S.documentTypeListItem('linhaIntegrada').title('Linhas Integradas'),
-            ]),
-        ),
-
-      S.listItem()
-        .title('🏷️ Taxonomia (compartilhada)')
-        .child(
-          S.list()
-            .title('Taxonomia')
+            .title('Taxonomias & Menus')
             .items([
               S.documentTypeListItem('category').title('Categorias'),
               S.documentTypeListItem('productLine').title('Linhas de Produto'),
+              S.documentTypeListItem('segment').title('Aplicações Agro no menu Fábricas'),
             ]),
         ),
 

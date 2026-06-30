@@ -3,6 +3,8 @@ import {PackageIcon} from '@sanity/icons'
 import {richTextOf} from './richText'
 import {cardHighlightsField} from './cardHighlights'
 import {SETORES} from './sectors'
+import {commercialFieldGroups} from './commercialFieldGroups'
+import {applicationSectionsField} from './applicationSections'
 
 // Solução (equipamento) para setores não-agro (construção civil, indústria, etc.)
 export const solucaoIndustrialType = defineType({
@@ -10,12 +12,14 @@ export const solucaoIndustrialType = defineType({
   title: 'Solução Industrial',
   type: 'document',
   icon: PackageIcon,
+  groups: commercialFieldGroups,
   fields: [
     defineField({
       name: 'name',
       title: 'Nome da Solução',
       description: 'Ex: Ensacadeira a calor, Esteira com balança integrada',
       type: 'string',
+      group: 'basic',
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -25,12 +29,14 @@ export const solucaoIndustrialType = defineType({
       type: 'array',
       of: [{type: 'string'}],
       options: {layout: 'tags'},
+      group: 'basic',
     }),
     defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
       options: {source: 'name', maxLength: 96},
+      group: 'basic',
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -40,6 +46,7 @@ export const solucaoIndustrialType = defineType({
         'Desative para ocultar esta solução do catálogo público sem apagar o cadastro.',
       type: 'boolean',
       initialValue: true,
+      group: 'basic',
     }),
     defineField({
       name: 'featuredOnHome',
@@ -48,6 +55,7 @@ export const solucaoIndustrialType = defineType({
         'Marque para exibir esta solução na seção Nossas Soluções da página inicial.',
       type: 'boolean',
       initialValue: false,
+      group: 'basic',
     }),
     defineField({
       name: 'homeOrder',
@@ -55,13 +63,7 @@ export const solucaoIndustrialType = defineType({
       description:
         'Define a ordem de exibição na seção Nossas Soluções da página inicial (ex: 1, 2, 3...).',
       type: 'number',
-    }),
-    defineField({
-      name: 'featuredCatchphrase',
-      title: 'Frase de Impacto (Destaque Home)',
-      description:
-        'Curta frase exibida abaixo do nome no card da seção Nossas Soluções.',
-      type: 'string',
+      group: 'basic',
     }),
     defineField({
       name: 'setores',
@@ -70,6 +72,7 @@ export const solucaoIndustrialType = defineType({
       type: 'array',
       of: [{type: 'string'}],
       options: {list: SETORES, layout: 'grid'},
+      group: 'classification',
       validation: (rule) => rule.required().min(1),
     }),
     defineField({
@@ -80,6 +83,7 @@ export const solucaoIndustrialType = defineType({
         'Usada no filtro por categoria da página de Soluções.',
       type: 'reference',
       to: [{type: 'category'}],
+      group: 'classification',
     }),
     defineField({
       name: 'line',
@@ -87,12 +91,21 @@ export const solucaoIndustrialType = defineType({
       description: 'Linha do produto (lista controlada, compartilhada com o agro).',
       type: 'reference',
       to: [{type: 'productLine'}],
+      group: 'classification',
     }),
     defineField({
       name: 'model',
       title: 'Modelo',
       description: 'Código/modelo do equipamento. Ex: EC-500, Pro X1, GA-2000.',
       type: 'string',
+      group: 'classification',
+    }),
+    defineField({
+      name: 'capacity',
+      title: 'Capacidade / Produção',
+      description: 'Ex: 500 kg/h, 2 ton/h, 600 sacos/h.',
+      type: 'string',
+      group: 'classification',
     }),
     defineField({
       name: 'coverImage',
@@ -100,6 +113,7 @@ export const solucaoIndustrialType = defineType({
       description: 'Imagem principal exibida nas listagens e na miniatura do Sanity.',
       type: 'image',
       options: {hotspot: true},
+      group: 'media',
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -113,6 +127,7 @@ export const solucaoIndustrialType = defineType({
           fields: [defineField({name: 'alt', title: 'Texto alternativo', type: 'string'})],
         }),
       ],
+      group: 'media',
     }),
     defineField({
       name: 'shortDescription',
@@ -122,12 +137,14 @@ export const solucaoIndustrialType = defineType({
         'O texto puro também alimenta o card na listagem e a meta description de SEO.',
       type: 'array',
       of: richTextOf,
+      group: 'technical',
     }),
     defineField({
       name: 'specifications',
       title: 'Especificações Técnicas',
       type: 'array',
       description: 'Adicione características como Potência, Peso, Dimensões, etc.',
+      group: 'technical',
       of: [
         defineArrayMember({
           type: 'object',
@@ -141,12 +158,14 @@ export const solucaoIndustrialType = defineType({
     }),
     cardHighlightsField(
       'Destaques exibidos no card azul lateral, cada um com um ícone à escolha. Se vazio, usa as primeiras especificações.',
+      'technical',
     ),
     defineField({
       name: 'datasheet',
       title: 'Arquivo PDF (Datasheet/Manual)',
       type: 'file',
       options: {accept: '.pdf'},
+      group: 'media',
     }),
     defineField({
       name: 'applications',
@@ -155,6 +174,7 @@ export const solucaoIndustrialType = defineType({
       type: 'array',
       of: [{type: 'string'}],
       options: {layout: 'tags'},
+      group: 'applications',
     }),
     defineField({
       name: 'productionScales',
@@ -172,12 +192,15 @@ export const solucaoIndustrialType = defineType({
         ],
         layout: 'grid',
       },
+      group: 'applications',
     }),
+    applicationSectionsField(),
     defineField({
       name: 'relatedSolutions',
       title: 'Soluções Relacionadas',
       type: 'array',
       description: 'Soluções que podem ser compradas em conjunto ou que são da mesma linha.',
+      group: 'relations',
       of: [defineArrayMember({type: 'reference', to: [{type: 'solucaoIndustrial'}]})],
     }),
     defineField({
@@ -185,12 +208,14 @@ export const solucaoIndustrialType = defineType({
       title: 'Texto Descritivo Principal',
       type: 'array',
       of: richTextOf,
+      group: 'content',
     }),
     defineField({
       name: 'faq',
       title: 'Perguntas Frequentes (FAQ)',
       description: 'Opcional. Se preenchido, substitui o FAQ padrão nesta página.',
       type: 'array',
+      group: 'content',
       of: [
         defineArrayMember({
           type: 'object',
@@ -218,6 +243,7 @@ export const solucaoIndustrialType = defineType({
       title: 'SEO',
       type: 'object',
       options: {collapsible: true, collapsed: true},
+      group: 'seo',
       fields: [
         defineField({
           name: 'metaTitle',

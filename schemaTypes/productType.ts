@@ -2,17 +2,22 @@ import {defineType, defineField, defineArrayMember} from 'sanity'
 import {PackageIcon} from '@sanity/icons'
 import {richTextOf} from './richText'
 import {cardHighlightsField} from './cardHighlights'
+import {commercialFieldGroups} from './commercialFieldGroups'
+import {applicationSectionsField} from './applicationSections'
+import {SETORES} from './sectors'
 
 export const productType = defineType({
   name: 'product',
   title: 'Produto',
   type: 'document',
   icon: PackageIcon,
+  groups: commercialFieldGroups,
   fields: [
     defineField({
       name: 'name',
       title: 'Nome do Produto',
       type: 'string',
+      group: 'basic',
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -25,6 +30,7 @@ export const productType = defineType({
       options: {
         layout: 'tags',
       },
+      group: 'basic',
     }),
     defineField({
       name: 'slug',
@@ -34,6 +40,7 @@ export const productType = defineType({
         source: 'name',
         maxLength: 96,
       },
+      group: 'basic',
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -43,6 +50,7 @@ export const productType = defineType({
         'Desative para ocultar este equipamento do catálogo público sem apagar o cadastro.',
       type: 'boolean',
       initialValue: true,
+      group: 'basic',
     }),
     defineField({
       name: 'featuredOnHome',
@@ -51,6 +59,7 @@ export const productType = defineType({
         'Marque esta opção para exibir este produto na seção Nossas Soluções da página inicial.',
       type: 'boolean',
       initialValue: false,
+      group: 'basic',
     }),
     defineField({
       name: 'homeOrder',
@@ -58,19 +67,14 @@ export const productType = defineType({
       description:
         'Define a ordem de exibição do produto na seção Nossas Soluções da página inicial (ex: 1, 2, 3...)',
       type: 'number',
-    }),
-    defineField({
-      name: 'featuredCatchphrase',
-      title: 'Frase de Impacto (Destaque Home)',
-      description:
-        'Curta frase que aparecerá logo abaixo do nome do produto no card da seção Nossas Soluções.',
-      type: 'string',
+      group: 'basic',
     }),
     defineField({
       name: 'category',
       title: 'Categoria',
       type: 'reference',
       to: [{type: 'category'}],
+      group: 'classification',
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -79,12 +83,21 @@ export const productType = defineType({
       description: 'Linha do produto (lista controlada). Exibida abaixo do nome na página.',
       type: 'reference',
       to: [{type: 'productLine'}],
+      group: 'classification',
     }),
     defineField({
       name: 'model',
       title: 'Modelo',
       description: 'Código/modelo do equipamento. Ex: MH-500, Pro X1, GA-2000.',
       type: 'string',
+      group: 'classification',
+    }),
+    defineField({
+      name: 'capacity',
+      title: 'Capacidade / Produção',
+      description: 'Ex: 500 kg/h, 2 ton/h, 600 sacos/h.',
+      type: 'string',
+      group: 'classification',
     }),
     defineField({
       name: 'coverImage',
@@ -94,6 +107,7 @@ export const productType = defineType({
       options: {
         hotspot: true,
       },
+      group: 'media',
     }),
     defineField({
       name: 'images',
@@ -114,6 +128,7 @@ export const productType = defineType({
           ],
         }),
       ],
+      group: 'media',
     }),
     // ATENÇÃO: campo migrado de 'text' (string) para texto rico. Produtos antigos
     // que tinham texto simples precisam ser reeditados aqui. O card da listagem,
@@ -126,12 +141,14 @@ export const productType = defineType({
       description:
         'Resumo que aparece abaixo das fotos na página do produto (com edição rica). ' +
         'O texto puro também alimenta o card na listagem e a meta description de SEO.',
+      group: 'technical',
     }),
     defineField({
       name: 'specifications',
       title: 'Especificações Técnicas',
       type: 'array',
       description: 'Adicione características como Potência, Peso, Dimensões, etc.',
+      group: 'technical',
       of: [
         defineArrayMember({
           type: 'object',
@@ -160,6 +177,7 @@ export const productType = defineType({
     }),
     cardHighlightsField(
       'Destaques exibidos no card azul lateral, cada um com um ícone à escolha. Se vazio, usa as primeiras especificações.',
+      'technical',
     ),
     defineField({
       name: 'datasheet',
@@ -168,6 +186,7 @@ export const productType = defineType({
       options: {
         accept: '.pdf',
       },
+      group: 'media',
     }),
     defineField({
       name: 'applications',
@@ -178,6 +197,7 @@ export const productType = defineType({
       options: {
         layout: 'tags',
       },
+      group: 'applications',
     }),
     defineField({
       name: 'animalTypes',
@@ -198,6 +218,17 @@ export const productType = defineType({
         ],
         layout: 'grid',
       },
+      group: 'applications',
+    }),
+    defineField({
+      name: 'setores',
+      title: 'Setores atendidos',
+      description:
+        'Opcional. Use quando este equipamento avulso também puder atender setores fora do agro.',
+      type: 'array',
+      of: [{type: 'string'}],
+      options: {list: SETORES, layout: 'grid'},
+      group: 'applications',
     }),
     defineField({
       name: 'productionScales',
@@ -215,13 +246,16 @@ export const productType = defineType({
         ],
         layout: 'grid',
       },
+      group: 'applications',
     }),
+    applicationSectionsField(),
     defineField({
       name: 'relatedProducts',
       title: 'Produtos Correlatos',
       type: 'array',
       description:
         'Selecione produtos que podem ser comprados em conjunto ou que são da mesma linha.',
+      group: 'relations',
       of: [
         defineArrayMember({
           type: 'reference',
@@ -234,6 +268,7 @@ export const productType = defineType({
       title: 'Texto Descritivo Principal',
       type: 'array',
       of: richTextOf,
+      group: 'content',
     }),
     defineField({
       name: 'faq',
@@ -241,6 +276,7 @@ export const productType = defineType({
       description:
         'Opcional. Se preenchido, substitui o FAQ padrão do site nesta página de produto.',
       type: 'array',
+      group: 'content',
       of: [
         defineArrayMember({
           type: 'object',
@@ -268,6 +304,7 @@ export const productType = defineType({
       title: 'SEO',
       type: 'object',
       options: {collapsible: true, collapsed: true},
+      group: 'seo',
       fields: [
         defineField({
           name: 'metaTitle',

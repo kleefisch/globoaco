@@ -3,6 +3,8 @@ import {ComponentIcon} from '@sanity/icons'
 import {richTextOf} from './richText'
 import {cardHighlightsField, cardHighlightIcons} from './cardHighlights'
 import {SETORES} from './sectors'
+import {commercialFieldGroups} from './commercialFieldGroups'
+import {applicationSectionsField} from './applicationSections'
 
 // Linha de produção integrada para setores não-agro (ensaque, dosagem, mistura...)
 export const linhaIntegradaType = defineType({
@@ -10,12 +12,14 @@ export const linhaIntegradaType = defineType({
   title: 'Linha Integrada',
   type: 'document',
   icon: ComponentIcon,
+  groups: commercialFieldGroups,
   fields: [
     defineField({
       name: 'name',
       title: 'Nome da Linha',
       description: 'Ex: Linha de Ensaque e Selagem de Areia',
       type: 'string',
+      group: 'basic',
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -26,12 +30,14 @@ export const linhaIntegradaType = defineType({
       type: 'array',
       of: [{type: 'string'}],
       options: {layout: 'tags'},
+      group: 'basic',
     }),
     defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
       options: {source: 'name', maxLength: 96},
+      group: 'basic',
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -41,12 +47,14 @@ export const linhaIntegradaType = defineType({
         'Desative para ocultar esta linha integrada do catálogo público sem apagar o cadastro.',
       type: 'boolean',
       initialValue: true,
+      group: 'basic',
     }),
     defineField({
       name: 'featuredCatchphrase',
       title: 'Frase de Impacto (card)',
       description: 'Curta frase exibida no card da listagem.',
       type: 'string',
+      group: 'basic',
     }),
     defineField({
       name: 'category',
@@ -55,6 +63,7 @@ export const linhaIntegradaType = defineType({
         'Categoria da linha integrada, usando a mesma lista dos produtos avulsos quando fizer sentido.',
       type: 'reference',
       to: [{type: 'category'}],
+      group: 'classification',
     }),
     defineField({
       name: 'line',
@@ -62,12 +71,32 @@ export const linhaIntegradaType = defineType({
       description: 'Linha do produto/sistema, usando a mesma lista controlada dos produtos avulsos.',
       type: 'reference',
       to: [{type: 'productLine'}],
+      group: 'classification',
     }),
     defineField({
       name: 'model',
       title: 'Modelo',
       description: 'Código/modelo da linha integrada. Ex: LI-600, Ensacamento Pro, Sistema 20T.',
       type: 'string',
+      group: 'classification',
+    }),
+    defineField({
+      name: 'catalogGroup',
+      title: 'Categoria no catálogo de fábricas',
+      description:
+        'Define em qual filtro de Fábricas Completas esta linha aparece no site. Se não preencher, entra em Linhas Integradas.',
+      type: 'string',
+      initialValue: 'integrated',
+      options: {
+        list: [
+          {title: 'Mini-Fábricas', value: 'mini'},
+          {title: 'Linhas Compactas', value: 'compact'},
+          {title: 'Industrial / Turn-key', value: 'industrial'},
+          {title: 'Linhas Integradas', value: 'integrated'},
+        ],
+        layout: 'radio',
+      },
+      group: 'classification',
     }),
     defineField({
       name: 'setores',
@@ -75,6 +104,7 @@ export const linhaIntegradaType = defineType({
       type: 'array',
       of: [{type: 'string'}],
       options: {list: SETORES, layout: 'grid'},
+      group: 'classification',
       validation: (rule) => rule.required().min(1),
     }),
     defineField({
@@ -82,12 +112,14 @@ export const linhaIntegradaType = defineType({
       title: 'Capacidade',
       description: 'Ex: 600 sacos/h, 20 ton/h',
       type: 'string',
+      group: 'classification',
     }),
     defineField({
       name: 'coverImage',
       title: 'Imagem de Capa',
       type: 'image',
       options: {hotspot: true},
+      group: 'media',
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -101,6 +133,7 @@ export const linhaIntegradaType = defineType({
           fields: [defineField({name: 'alt', title: 'Texto alternativo', type: 'string'})],
         }),
       ],
+      group: 'media',
     }),
     defineField({
       name: 'shortDescription',
@@ -110,12 +143,14 @@ export const linhaIntegradaType = defineType({
         'O texto puro também alimenta o card na listagem e a meta description de SEO.',
       type: 'array',
       of: richTextOf,
+      group: 'technical',
     }),
     defineField({
       name: 'specifications',
       title: 'Especificações Técnicas',
       type: 'array',
       description: 'Adicione características como Capacidade, Potência, Dimensões, Área ocupada, etc.',
+      group: 'technical',
       of: [
         defineArrayMember({
           type: 'object',
@@ -129,12 +164,14 @@ export const linhaIntegradaType = defineType({
     }),
     cardHighlightsField(
       'Destaques exibidos no card azul lateral, cada um com um ícone à escolha. Se vazio, o card fica sem destaques.',
+      'technical',
     ),
     defineField({
       name: 'datasheet',
       title: 'Arquivo PDF (Datasheet/Catálogo)',
       type: 'file',
       options: {accept: '.pdf'},
+      group: 'media',
     }),
     defineField({
       name: 'applications',
@@ -143,6 +180,7 @@ export const linhaIntegradaType = defineType({
       type: 'array',
       of: [{type: 'string'}],
       options: {layout: 'tags'},
+      group: 'applications',
     }),
     defineField({
       name: 'productionScales',
@@ -160,12 +198,15 @@ export const linhaIntegradaType = defineType({
         ],
         layout: 'grid',
       },
+      group: 'applications',
     }),
+    applicationSectionsField(),
     defineField({
       name: 'includedEquipment',
       title: 'O que está incluso (Equipamentos)',
       description: 'Equipamentos que compõem a linha. Vincule às soluções do catálogo quando existirem.',
       type: 'array',
+      group: 'system',
       of: [
         defineArrayMember({
           type: 'object',
@@ -193,6 +234,7 @@ export const linhaIntegradaType = defineType({
       title: 'Fluxo de Produção (etapas)',
       description: 'Ex: Dosagem → Transporte → Pesagem → Ensaque → Selagem.',
       type: 'array',
+      group: 'system',
       of: [
         defineArrayMember({
           type: 'object',
@@ -221,6 +263,7 @@ export const linhaIntegradaType = defineType({
       title: 'Descrição Detalhada (texto rico)',
       type: 'array',
       of: richTextOf,
+      group: 'content',
     }),
     defineField({
       name: 'faq',
@@ -228,6 +271,7 @@ export const linhaIntegradaType = defineType({
       description:
         'Opcional. Se preenchido, substitui o FAQ padrão nesta página de linha integrada.',
       type: 'array',
+      group: 'content',
       of: [
         defineArrayMember({
           type: 'object',
@@ -255,17 +299,20 @@ export const linhaIntegradaType = defineType({
       title: 'Cases Relacionados (Projetos entregues)',
       type: 'array',
       of: [defineArrayMember({type: 'reference', to: [{type: 'project'}]})],
+      group: 'relations',
     }),
     defineField({
       name: 'order',
       title: 'Ordem de Exibição',
       type: 'number',
+      group: 'basic',
     }),
     defineField({
       name: 'seo',
       title: 'SEO',
       type: 'object',
       options: {collapsible: true, collapsed: true},
+      group: 'seo',
       fields: [
         defineField({
           name: 'metaTitle',
@@ -288,12 +335,22 @@ export const linhaIntegradaType = defineType({
     select: {
       title: 'name',
       category: 'category.title',
+      catalogGroup: 'catalogGroup',
       media: 'coverImage',
       capacity: 'capacity',
       isActive: 'isActive',
     },
-    prepare({title, category, media, capacity, isActive}) {
-      const subtitle = [category || 'Linha Integrada', capacity].filter(Boolean).join(' · ')
+    prepare({title, category, catalogGroup, media, capacity, isActive}) {
+      const groupLabel =
+        {
+          mini: 'Mini-Fábricas',
+          compact: 'Linhas Compactas',
+          industrial: 'Industrial / Turn-key',
+          integrated: 'Linhas Integradas',
+        }[catalogGroup as string] || 'Linhas Integradas'
+      const subtitle = [category || 'Linha Integrada', groupLabel, capacity]
+        .filter(Boolean)
+        .join(' · ')
       return {title, subtitle: isActive === false ? `INATIVO · ${subtitle}` : subtitle, media}
     },
   },
