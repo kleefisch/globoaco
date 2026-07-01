@@ -26,6 +26,13 @@ export const projectType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'isActive',
+      title: 'Ativo no site',
+      description: 'Desative para ocultar este projeto/case do site público sem apagar o cadastro.',
+      type: 'boolean',
+      initialValue: true,
+    }),
+    defineField({
       name: 'featuredOnHome',
       title: 'Destacar na Home Page',
       description:
@@ -163,4 +170,20 @@ export const projectType = defineType({
       of: richTextOf,
     }),
   ],
+  preview: {
+    select: {
+      title: 'title',
+      location: 'location',
+      media: 'coverImage',
+      isActive: 'isActive',
+    },
+    prepare({title, location, media, isActive}) {
+      const subtitle = location || 'Projeto / Case'
+      return {
+        title,
+        subtitle: isActive === false ? `INATIVO · ${subtitle}` : subtitle,
+        media,
+      }
+    },
+  },
 })

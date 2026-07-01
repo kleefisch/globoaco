@@ -18,6 +18,13 @@ export const testimonialType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'isActive',
+      title: 'Ativo no site',
+      description: 'Desative para ocultar este depoimento do site público sem apagar o cadastro.',
+      type: 'boolean',
+      initialValue: true,
+    }),
+    defineField({
       name: 'location',
       title: 'Localização (Cidade, UF)',
       type: 'string',
@@ -59,6 +66,13 @@ export const testimonialType = defineType({
     select: {
       title: 'name',
       subtitle: 'role',
+      isActive: 'isActive',
+    },
+    prepare({title, subtitle, isActive}) {
+      return {
+        title,
+        subtitle: isActive === false ? `INATIVO · ${subtitle || 'Depoimento oculto'}` : subtitle,
+      }
     },
   },
 })

@@ -25,6 +25,13 @@ export const postType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'isActive',
+      title: 'Ativo no site',
+      description: 'Desative para ocultar este artigo do blog público sem apagar o cadastro.',
+      type: 'boolean',
+      initialValue: true,
+    }),
+    defineField({
       name: 'excerpt',
       title: 'Resumo / Linha Fina (Excerpt)',
       type: 'text',
@@ -121,10 +128,15 @@ export const postType = defineType({
       title: 'title',
       author: 'author.name',
       media: 'mainImage',
+      isActive: 'isActive',
     },
     prepare(selection) {
-      const {author} = selection
-      return {...selection, subtitle: author && `por ${author}`}
+      const {author, isActive} = selection
+      const subtitle = author ? `por ${author}` : undefined
+      return {
+        ...selection,
+        subtitle: isActive === false ? `INATIVO · ${subtitle || 'Artigo oculto'}` : subtitle,
+      }
     },
   },
 })
