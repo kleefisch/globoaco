@@ -27,6 +27,10 @@ export const categoryType = defineType({
       name: 'description',
       title: 'Descrição',
       type: 'text',
+      validation: (rule) =>
+        rule
+          .max(220)
+          .warning('Recomendado para a página técnica indexável da categoria.'),
     }),
   ],
 })

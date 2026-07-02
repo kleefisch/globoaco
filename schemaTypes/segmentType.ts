@@ -2,6 +2,7 @@ import {defineType, defineField, defineArrayMember} from 'sanity'
 import {UsersIcon} from '@sanity/icons'
 import {richTextOf} from './richText'
 import {cardHighlightIcons} from './cardHighlights'
+import {uniqueRouteSlug} from './routeSlugValidation'
 
 export const segmentType = defineType({
   name: 'segment',
@@ -22,7 +23,10 @@ export const segmentType = defineType({
       description: 'Vira /fabricas/<slug>. Ex: para-aves',
       type: 'slug',
       options: {source: 'title', maxLength: 96},
-      validation: (rule) => rule.required(),
+      validation: (rule) =>
+        rule
+          .required()
+          .custom(uniqueRouteSlug(['segment', 'productionLine', 'linhaIntegrada'], '/fabricas')),
     }),
     defineField({
       name: 'segmentKeys',
@@ -59,6 +63,8 @@ export const segmentType = defineType({
       description: 'Texto curto de abertura.',
       type: 'text',
       rows: 3,
+      validation: (rule) =>
+        rule.required().warning('Recomendado para meta description e abertura da página pilar.'),
     }),
 
     // Fases / blocos (ex: Crescimento, Postura, Poedeiras)

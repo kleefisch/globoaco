@@ -4,6 +4,7 @@ import {richTextOf} from './richText'
 import {cardHighlightsField, cardHighlightIcons} from './cardHighlights'
 import {commercialFieldGroups} from './commercialFieldGroups'
 import {applicationSectionsField} from './applicationSections'
+import {uniqueRouteSlug} from './routeSlugValidation'
 
 export const productionLineType = defineType({
   name: 'productionLine',
@@ -36,7 +37,10 @@ export const productionLineType = defineType({
       type: 'slug',
       options: {source: 'name', maxLength: 96},
       group: 'basic',
-      validation: (rule) => rule.required(),
+      validation: (rule) =>
+        rule
+          .required()
+          .custom(uniqueRouteSlug(['segment', 'productionLine', 'linhaIntegrada'], '/fabricas')),
     }),
     defineField({
       name: 'isActive',
@@ -153,6 +157,8 @@ export const productionLineType = defineType({
       type: 'array',
       of: richTextOf,
       group: 'technical',
+      validation: (rule) =>
+        rule.required().warning('Recomendado para meta description, cards e conversão.'),
     }),
 
     defineField({
@@ -192,6 +198,8 @@ export const productionLineType = defineType({
       of: [{type: 'string'}],
       options: {layout: 'tags'},
       group: 'applications',
+      validation: (rule) =>
+        rule.min(1).warning('Informe ao menos uma aplicação para melhorar filtros e SEO long tail.'),
     }),
     defineField({
       name: 'animalTypes',
@@ -313,6 +321,8 @@ export const productionLineType = defineType({
         'Opcional. Se preenchido, substitui o FAQ padrão nesta página de fábrica completa.',
       type: 'array',
       group: 'content',
+      validation: (rule) =>
+        rule.min(2).warning('Recomendado para rich results e dúvidas comerciais frequentes.'),
       of: [
         defineArrayMember({
           type: 'object',

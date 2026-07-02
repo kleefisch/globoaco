@@ -5,6 +5,7 @@ import {cardHighlightsField} from './cardHighlights'
 import {commercialFieldGroups} from './commercialFieldGroups'
 import {applicationSectionsField} from './applicationSections'
 import {SETORES} from './sectors'
+import {uniqueRouteSlug} from './routeSlugValidation'
 
 export const productType = defineType({
   name: 'product',
@@ -41,7 +42,8 @@ export const productType = defineType({
         maxLength: 96,
       },
       group: 'basic',
-      validation: (rule) => rule.required(),
+      validation: (rule) =>
+        rule.required().custom(uniqueRouteSlug(['product', 'solucaoIndustrial'], '/solucoes')),
     }),
     defineField({
       name: 'isActive',
@@ -108,6 +110,8 @@ export const productType = defineType({
         hotspot: true,
       },
       group: 'media',
+      validation: (rule) =>
+        rule.required().warning('Recomendado para SEO, cards do catálogo e compartilhamento.'),
     }),
     defineField({
       name: 'images',
@@ -142,6 +146,8 @@ export const productType = defineType({
         'Resumo que aparece abaixo das fotos na página do produto (com edição rica). ' +
         'O texto puro também alimenta o card na listagem e a meta description de SEO.',
       group: 'technical',
+      validation: (rule) =>
+        rule.required().warning('Recomendado para meta description, cards e conversão.'),
     }),
     defineField({
       name: 'specifications',
@@ -198,6 +204,8 @@ export const productType = defineType({
         layout: 'tags',
       },
       group: 'applications',
+      validation: (rule) =>
+        rule.min(1).warning('Informe ao menos uma aplicação para melhorar filtros e SEO long tail.'),
     }),
     defineField({
       name: 'animalTypes',
@@ -277,6 +285,8 @@ export const productType = defineType({
         'Opcional. Se preenchido, substitui o FAQ padrão do site nesta página de produto.',
       type: 'array',
       group: 'content',
+      validation: (rule) =>
+        rule.min(2).warning('Recomendado para rich results e dúvidas comerciais frequentes.'),
       of: [
         defineArrayMember({
           type: 'object',

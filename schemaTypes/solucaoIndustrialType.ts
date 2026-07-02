@@ -5,6 +5,7 @@ import {cardHighlightsField} from './cardHighlights'
 import {SETORES} from './sectors'
 import {commercialFieldGroups} from './commercialFieldGroups'
 import {applicationSectionsField} from './applicationSections'
+import {uniqueRouteSlug} from './routeSlugValidation'
 
 // Solução (equipamento) para setores não-agro (construção civil, indústria, etc.)
 export const solucaoIndustrialType = defineType({
@@ -37,7 +38,8 @@ export const solucaoIndustrialType = defineType({
       type: 'slug',
       options: {source: 'name', maxLength: 96},
       group: 'basic',
-      validation: (rule) => rule.required(),
+      validation: (rule) =>
+        rule.required().custom(uniqueRouteSlug(['product', 'solucaoIndustrial'], '/solucoes')),
     }),
     defineField({
       name: 'isActive',
@@ -138,6 +140,8 @@ export const solucaoIndustrialType = defineType({
       type: 'array',
       of: richTextOf,
       group: 'technical',
+      validation: (rule) =>
+        rule.required().warning('Recomendado para meta description, cards e conversão.'),
     }),
     defineField({
       name: 'specifications',
@@ -175,6 +179,8 @@ export const solucaoIndustrialType = defineType({
       of: [{type: 'string'}],
       options: {layout: 'tags'},
       group: 'applications',
+      validation: (rule) =>
+        rule.min(1).warning('Informe ao menos uma aplicação/material para melhorar filtros e SEO.'),
     }),
     defineField({
       name: 'productionScales',
@@ -216,6 +222,8 @@ export const solucaoIndustrialType = defineType({
       description: 'Opcional. Se preenchido, substitui o FAQ padrão nesta página.',
       type: 'array',
       group: 'content',
+      validation: (rule) =>
+        rule.min(2).warning('Recomendado para rich results e dúvidas comerciais frequentes.'),
       of: [
         defineArrayMember({
           type: 'object',
