@@ -115,8 +115,10 @@ export const tableBlock = defineArrayMember({
           return true
         }),
       of: [
-        {
+        defineArrayMember({
+          name: 'tableColumn',
           type: 'object',
+          title: 'Coluna',
           fields: [
             defineField({
               name: 'label',
@@ -138,7 +140,7 @@ export const tableBlock = defineArrayMember({
               return {title: title || 'Coluna', subtitle: align || 'left'}
             },
           },
-        },
+        }),
       ],
     }),
     defineField({
@@ -155,8 +157,10 @@ export const tableBlock = defineArrayMember({
           return true
         }),
       of: [
-        {
+        defineArrayMember({
+          name: 'tableRow',
           type: 'object',
+          title: 'Linha',
           fields: [
             defineField({
               name: 'cells',
@@ -166,8 +170,10 @@ export const tableBlock = defineArrayMember({
               type: 'array',
               validation: (rule) => rule.required().min(1).max(8),
               of: [
-                {
+                defineArrayMember({
+                  name: 'tableCell',
                   type: 'object',
+                  title: 'Célula',
                   fields: [
                     defineField({
                       name: 'text',
@@ -190,7 +196,7 @@ export const tableBlock = defineArrayMember({
                       return {title: title || 'Célula', subtitle: tone || 'default'}
                     },
                   },
-                },
+                }),
               ],
             }),
           ],
@@ -205,7 +211,7 @@ export const tableBlock = defineArrayMember({
               }
             },
           },
-        },
+        }),
       ],
     }),
   ],
